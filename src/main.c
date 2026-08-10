@@ -44,7 +44,7 @@ int main(void) {
 
 			ll_add_first(task_list, new_task);
 
-			printf("Tarefa adicionada com sucesso! ID: %s\n\n", new_task->id);
+			printf("\nTarefa adicionada com sucesso! ID: %s\n\n", new_task->id);
 
 			system("pause");
 			system("cls");
@@ -52,14 +52,56 @@ int main(void) {
 			printf("---------- Lista de Tarefas ----------\n");
 			ll_for_each(task_list, print_task, NULL);
 
+			printf("\n");
+
 			system("pause");
 			system("cls");
 		} else if (strcmp(option, "3") == 0) {
 			printf("---------- Check de Tarefas ----------\n");
-			printf("Qual o ID da sua tarefa? ID: ");
+			
+			char id_field[ID_LENGTH + 1] = "";
 
-			char id_field[ID_LENGTH] = "";
+			printf("Qual o ID da sua tarefa? ID: ");
 			read_input(id_field, sizeof(id_field));
+
+			TaskSearchContext search = { .search_id = id_field, .found_task = NULL };
+			ll_for_each(task_list, find_task_by_id, &search);
+
+			if (search.found_task != NULL) {
+				printf("\nTarefa concluída!\n");
+
+				search.found_task->status.is_completed = true;
+				
+				printf("[%s] %s (%s)\n\n", search.found_task->id, search.found_task->description, search.found_task->status.is_completed ? "Concluída" : "Pendente");
+			} else {
+				printf("\nTarefa não encontrada!\n\n");
+			}
+
+			system("pause");
+			system("cls");
+		} else if (strcmp(option, "4") == 0) {
+			printf("---------- Remover Tarefa ----------\n");
+
+			char id_field[ID_LENGTH + 1] = "";
+
+			printf("Qual o ID da sua tarefa? ID: ");
+			read_input(id_field, sizeof(id_field));
+
+			TaskSearchContext search = { .search_id = id_field, .found_task = NULL, .found_index = -1, .current_index = 0 };
+			ll_for_each(task_list, find_task_by_id, &search);
+
+			if (search.found_task != NULL) {
+				Task* removed = (Task*)ll_remove_at(task_list, (size_t)search.found_index);
+				free_task(removed);
+
+				printf("\nTarefa removida com sucesso!\n\n");
+			}
+			else {
+				printf("\nTarefa não encontrada!\n\n");
+			}
+
+			system("pause");
+			system("cls");
 		}
 	}
 

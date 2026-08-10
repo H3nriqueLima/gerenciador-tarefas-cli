@@ -147,7 +147,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\constants.h" />
+    <ClInclude Include="include\input.h" />
+    <ClInclude Include="include\menu.h" />
+    <ClInclude Include="include\task.h" />
     <ClInclude Include="include\utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
