@@ -9,6 +9,7 @@
 #include <task.h>
 #include <menu.h>
 #include <input.h>
+#include <file.h>
 
 int main(void) {
 	srand((unsigned int)time(NULL));
@@ -18,6 +19,8 @@ int main(void) {
 	system("cls");
 
 	LinkedList *task_list = ll_create();
+
+	load_tasks(task_list);
 
 	while (true) {
 		show_menu();
@@ -43,6 +46,8 @@ int main(void) {
 			new_task->status.is_completed = false;
 
 			ll_add_first(task_list, new_task);
+
+			save_tasks(task_list);
 
 			printf("\nTarefa adicionada com sucesso! ID: %s\n\n", new_task->id);
 
@@ -71,6 +76,8 @@ int main(void) {
 				printf("\nTarefa concluída!\n");
 
 				search.found_task->status.is_completed = true;
+
+				save_tasks(task_list);
 				
 				printf("[%s] %s (%s)\n\n", search.found_task->id, search.found_task->description, search.found_task->status.is_completed ? "Concluída" : "Pendente");
 			} else {
@@ -94,6 +101,8 @@ int main(void) {
 				Task* removed = (Task*)ll_remove_at(task_list, (size_t)search.found_index);
 				free_task(removed);
 
+				save_tasks(task_list);
+
 				printf("\nTarefa removida com sucesso!\n\n");
 			}
 			else {
@@ -102,8 +111,10 @@ int main(void) {
 
 			system("pause");
 			system("cls");
+		} else if (strcmp(option, "5") == 0) {
+			printf("Finalizando programa...");
+			ll_destroy_with_values(task_list, free_task);
+			break;
 		}
 	}
-
-	//ll_destroy_with_values(task_list, free_task);
 }
